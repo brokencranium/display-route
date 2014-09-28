@@ -118,7 +118,7 @@ public class MapsActivity extends FragmentActivity {
         provider = locationManager.getBestProvider(criteria, true);
         Log.i(this.getClass().getSimpleName(), "Provider Name" + provider);
         locationManager.getLastKnownLocation(provider);
-        locationManager.requestLocationUpdates(provider, 5, 20, locationListener);
+        locationManager.requestLocationUpdates(provider, 1500, 10, locationListener);
     }
 
     private void updateMapLocation(Location location) {
@@ -127,10 +127,7 @@ public class MapsActivity extends FragmentActivity {
         zoom = mMap.getCameraPosition().zoom;
 
      //   mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,zoom));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-
-        polylineOptions.add(latLng);
-        mMap.addPolyline(polylineOptions);
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
 
         mMap.addMarker(new MarkerOptions()
@@ -142,11 +139,13 @@ public class MapsActivity extends FragmentActivity {
         cameraPosition = CameraPosition.builder()
                 .target(latLng)
                 .zoom(zoom)
-                .bearing(0)
+                .bearing(90)
+                .tilt(30)
                 .build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 10, null);
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 1500, null);
 
-
+        polylineOptions.add(latLng);
+        mMap.addPolyline(polylineOptions);
 
     }
 
