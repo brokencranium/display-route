@@ -28,6 +28,8 @@ public class MapsActivity extends FragmentActivity {
     private LatLng latLng;
     private float zoom = 0;
 
+    private static final String TEST_PROVIDER = "TEST_PROVIDER";
+
     private LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
@@ -103,19 +105,28 @@ public class MapsActivity extends FragmentActivity {
     private void setUpMap() {
         polylineOptions = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
         mMap.setMyLocationEnabled(true);
+//        mMap.setBuildingsEnabled(true);
+//        mMap.setTrafficEnabled(true);
+
 
     }
 
     private void setUpListener() {
         String context = Context.LOCATION_SERVICE;
         LocationManager locationManager = (LocationManager) getSystemService(context);
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        criteria.setAltitudeRequired(false);
-        criteria.setBearingRequired(false);
-        criteria.setCostAllowed(true);
-        criteria.setPowerRequirement(Criteria.POWER_HIGH);
-        provider = locationManager.getBestProvider(criteria, true);
+
+        if (locationManager.getProvider(TEST_PROVIDER) != null &&
+                locationManager.isProviderEnabled(TEST_PROVIDER)) {
+            provider = TEST_PROVIDER;
+        } else {
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_FINE);
+            criteria.setAltitudeRequired(false);
+            criteria.setBearingRequired(false);
+            criteria.setCostAllowed(true);
+            criteria.setPowerRequirement(Criteria.POWER_HIGH);
+            provider = locationManager.getBestProvider(criteria, true);
+        }
         Log.i(this.getClass().getSimpleName(), "Provider Name" + provider);
         locationManager.getLastKnownLocation(provider);
         locationManager.requestLocationUpdates(provider, 1500, 10, locationListener);
@@ -125,9 +136,6 @@ public class MapsActivity extends FragmentActivity {
         //    Log.i(this.getClass().getSimpleName(),"lat + long" + location.getLatitude() + " " + location.getLongitude());
         latLng = new LatLng(location.getLatitude(), location.getLongitude());
         zoom = mMap.getCameraPosition().zoom;
-
-     //   mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,zoom));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
 
         mMap.addMarker(new MarkerOptions()
@@ -140,7 +148,7 @@ public class MapsActivity extends FragmentActivity {
                 .target(latLng)
                 .zoom(zoom)
                 .bearing(90)
-                .tilt(30)
+                .tilt(0)
                 .build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 1500, null);
 
