@@ -13,17 +13,20 @@ import android.util.Log;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    private  PolylineOptions polylineOptions;
+    private PolylineOptions polylineOptions;
     private String provider;
     private CameraPosition cameraPosition;
     private LatLng latLng;
+    private float zoom = 0;
 
     private LocationListener locationListener = new LocationListener() {
         @Override
@@ -48,10 +51,10 @@ public class MapsActivity extends FragmentActivity {
     };
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        zoom = 15;
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
         setUpListener();
@@ -67,11 +70,11 @@ public class MapsActivity extends FragmentActivity {
      * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
      * installed) and the map has not already been instantiated.. This will ensure that we only ever
      * call {@link #setUpMap()} once when {@link #mMap} is not null.
-     * <p>
+     * <p/>
      * If it isn't installed {@link SupportMapFragment} (and
      * {@link com.google.android.gms.maps.MapView MapView}) will show a prompt for the user to
      * install/update the Google Play services APK on their device.
-     * <p>
+     * <p/>
      * A user can return to this FragmentActivity after following the prompt and correctly
      * installing/updating/enabling the Google Play services. Since the FragmentActivity may not
      * have been completely destroyed during this process (it is likely that it would only be
@@ -86,6 +89,7 @@ public class MapsActivity extends FragmentActivity {
                     .getMap();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
+
                 setUpMap();
             }
         }
@@ -98,14 +102,7 @@ public class MapsActivity extends FragmentActivity {
      */
     private void setUpMap() {
         polylineOptions = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
-//        mMap.addMarker(new MarkerOptions()
-//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.abc_spinner_ab_holo_dark))
-//                .flat(true)
-//                .rotation(245));
-
         mMap.setMyLocationEnabled(true);
-
-//        cameraPosition.;
 
     }
 
@@ -121,16 +118,34 @@ public class MapsActivity extends FragmentActivity {
         provider = locationManager.getBestProvider(criteria, true);
         Log.i(this.getClass().getSimpleName(), "Provider Name" + provider);
         locationManager.getLastKnownLocation(provider);
-        locationManager.requestLocationUpdates(provider, 2000, 10, locationListener);
+        locationManager.requestLocationUpdates(provider, 5, 20, locationListener);
     }
 
     private void updateMapLocation(Location location) {
-    //    Log.i(this.getClass().getSimpleName(),"lat + long" + location.getLatitude() + " " + location.getLongitude());
-        latLng = new LatLng(location.getLatitude(),location.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+        //    Log.i(this.getClass().getSimpleName(),"lat + long" + location.getLatitude() + " " + location.getLongitude());
+        latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        zoom = mMap.getCameraPosition().zoom;
+
+     //   mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,zoom));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
         polylineOptions.add(latLng);
         mMap.addPolyline(polylineOptions);
+
+
+        mMap.addMarker(new MarkerOptions()
+                        .icon(BitmapDescriptorFactory.fromResource(android.R.drawable.arrow_up_float))
+                        .position(latLng)
+                        .flat(true)
+                        .rotation(0)
+        );
+        cameraPosition = CameraPosition.builder()
+                .target(latLng)
+                .zoom(zoom)
+                .bearing(0)
+                .build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 10, null);
+
 
 
     }
