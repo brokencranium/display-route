@@ -105,6 +105,7 @@ public class MapsActivity extends FragmentActivity {
     private void setUpMap() {
         polylineOptions = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
         mMap.setMyLocationEnabled(true);
+        mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 //        mMap.setBuildingsEnabled(true);
 //        mMap.setTrafficEnabled(true);
 
