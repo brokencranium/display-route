@@ -13,9 +13,9 @@ import android.util.Log;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -26,7 +26,7 @@ public class MapsActivity extends FragmentActivity {
     private String provider;
     private CameraPosition cameraPosition;
     private LatLng latLng;
-    private float zoom = 0;
+    private Marker marker;
 
     private static final String TEST_PROVIDER = "TEST_PROVIDER";
 
@@ -56,7 +56,6 @@ public class MapsActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        zoom = 15;
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
         setUpListener();
@@ -136,18 +135,20 @@ public class MapsActivity extends FragmentActivity {
     private void updateMapLocation(Location location) {
         //    Log.i(this.getClass().getSimpleName(),"lat + long" + location.getLatitude() + " " + location.getLongitude());
         latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        zoom = mMap.getCameraPosition().zoom;
-
-
-        mMap.addMarker(new MarkerOptions()
-                        .icon(BitmapDescriptorFactory.fromResource(android.R.drawable.arrow_up_float))
+        if ( marker != null ) {
+            marker.remove();
+        }
+        marker = mMap.addMarker(new MarkerOptions()
+//                        .icon(BitmapDescriptorFactory.fromResource(android.R.drawable.arrow_up_float))
                         .position(latLng)
-                        .flat(true)
-                        .rotation(0)
+//                        .flat(true)
+//                        .anchor(.5f,.5f)
+//                        .rotation(90)
         );
+
         cameraPosition = CameraPosition.builder()
                 .target(latLng)
-                .zoom(zoom)
+                .zoom(mMap.getCameraPosition().zoom)
                 .bearing(90)
                 .tilt(0)
                 .build();
