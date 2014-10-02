@@ -13,6 +13,7 @@ import android.util.Log;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -102,12 +103,9 @@ public class MapsActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        polylineOptions = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
+        polylineOptions = new PolylineOptions().width(5).color(Color.rgb(97,125,77)).geodesic(true);
         mMap.setMyLocationEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-//        mMap.setBuildingsEnabled(true);
-//        mMap.setTrafficEnabled(true);
-
 
     }
 
@@ -139,8 +137,9 @@ public class MapsActivity extends FragmentActivity {
             marker.remove();
         }
         marker = mMap.addMarker(new MarkerOptions()
-//                        .icon(BitmapDescriptorFactory.fromResource(android.R.drawable.arrow_up_float))
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                         .position(latLng)
+                        .alpha(0.7f)
 //                        .flat(true)
 //                        .anchor(.5f,.5f)
 //                        .rotation(90)
