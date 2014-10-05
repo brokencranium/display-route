@@ -1,4 +1,4 @@
-package com.vv.buildstuff.displayroute;
+package com.vv.buildstuff.displayroute.response;
 
 /**
  * Created by vvennava on 10/4/14.
