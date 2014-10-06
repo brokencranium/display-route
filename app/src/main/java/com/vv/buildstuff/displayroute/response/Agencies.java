@@ -3,6 +3,9 @@ package com.vv.buildstuff.displayroute.response;
 /**
  * Created by vvennava on 10/4/14.
  */
+//@XmlAccessorType(XmlAccessType.FIELD)
+//@XmlType(propOrder = {"regionId", "regionName", "countrySubdivisionName"})
+
 public class Agencies {
     private String name;
     private String url;
@@ -39,5 +42,14 @@ public class Agencies {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    @Override
+    public String toString() {
+        return "Agencies [" +
+                "name='" + name + '\'' +
+                ", url='" + url + '\'' +
+                ", phone='" + phone + '\'' +
+                ']';
     }
 }

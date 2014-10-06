@@ -104,4 +104,19 @@ public class Legs {
     public void setEndAddress(String endAddress) {
         this.endAddress = endAddress;
     }
+
+    @Override
+    public String toString() {
+        return "Legs [" +
+                "steps=" + steps +
+                ", distance=" + distance +
+                ", durationInTraffic=" + durationInTraffic +
+                ", arrivalTime=" + arrivalTime +
+                ", departureTime='" + departureTime +
+                ", startLocation='" + startLocation +
+                ", endLocation='" + endLocation +
+                ", startAddress='" + startAddress +
+                ", endAddress='" + endAddress +
+                ']';
+    }
 }

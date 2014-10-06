@@ -30,4 +30,12 @@ public class LocationStop {
     public void setLocation(String location) {
         this.location = location;
     }
+
+    @Override
+    public String toString() {
+        return "LocationStop [" +
+                "name='" + name + '\'' +
+                ", location='" + location + '\'' +
+                ']';
+    }
 }

@@ -40,4 +40,13 @@ public class ArrDepTime {
     public void setTimeZone(String timeZone) {
         this.timeZone = timeZone;
     }
+
+    @Override
+    public String toString() {
+        return "ArrDepTime [" +
+                "text='" + text + '\'' +
+                ", value='" + value + '\'' +
+                ", timeZone='" + timeZone + '\'' +
+                ']';
+    }
 }

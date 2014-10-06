@@ -92,4 +92,18 @@ public class Line {
     public void setVehicle(Vehicle vehicle) {
         this.vehicle = vehicle;
     }
+
+    @Override
+    public String toString() {
+        return "Line [" +
+                "name='" + name + '\'' +
+                ", shortName='" + shortName + '\'' +
+                ", color='" + color + '\'' +
+                ", agencies=" + agencies +
+                ", url='" + url + '\'' +
+                ", icon='" + icon + '\'' +
+                ", textColor='" + textColor + '\'' +
+                ", vehicle=" + vehicle +
+                ']';
+    }
 }

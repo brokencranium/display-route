@@ -3,14 +3,14 @@ package com.vv.buildstuff.displayroute.response;
 /**
  * Created by vvennava on 10/4/14.
  */
-public class NorthEast {
+public class StartLocation {
     private double lat;
     private double lng;
 
-    public NorthEast() {
+    public StartLocation() {
     }
 
-    public NorthEast(double lat, double lng) {
+    public StartLocation(double lat, double lng) {
         this.lat = lat;
         this.lng = lng;
     }
@@ -33,7 +33,7 @@ public class NorthEast {
 
     @Override
     public String toString() {
-        return "northeast[" +
+        return "start_location [" +
                 "lat=" + lat +
                 ", lng=" + lng +
                 ']';

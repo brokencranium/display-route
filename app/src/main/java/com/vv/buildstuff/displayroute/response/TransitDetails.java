@@ -92,5 +92,19 @@ public class TransitDetails {
     public void setLine(Line line) {
         this.line = line;
     }
+
+    @Override
+    public String toString() {
+        return "TransitDetails [" +
+                "arrivalStop=" + arrivalStop +
+                ", departureStop=" + departureStop +
+                ", arrivalTime=" + arrivalTime +
+                ", departureTime=" + departureTime +
+                ", headSign='" + headSign + '\'' +
+                ", headWay='" + headWay + '\'' +
+                ", numStops='" + numStops + '\'' +
+                ", line=" + line +
+                ']';
+    }
 }
 

@@ -20,4 +20,11 @@ private String arrivalTime;
     public void setArrivalTime(String arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
+
+    @Override
+    public String toString() {
+        return "ArrivalTime [" +
+                "arrivalTime='" + arrivalTime + '\'' +
+                ']';
+    }
 }

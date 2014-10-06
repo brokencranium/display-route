@@ -4,30 +4,38 @@ package com.vv.buildstuff.displayroute.response;
  * Created by vvennava on 10/4/14.
  */
 public class SouthWest {
-    private String lat;
-    private String lng;
+    private double lat;
+    private double lng;
 
     public SouthWest() {
     }
 
-    public SouthWest(String lat, String lng) {
+    public SouthWest(double lat, double lng) {
         this.lat = lat;
         this.lng = lng;
     }
 
-    public String getLat() {
+    public double getLat() {
         return lat;
     }
 
-    public void setLat(String lat) {
+    public void setLat(double lat) {
         this.lat = lat;
     }
 
-    public String getLng() {
+    public double getLng() {
         return lng;
     }
 
-    public void setLng(String lng) {
+    public void setLng(double lng) {
         this.lng = lng;
+    }
+
+    @Override
+    public String toString() {
+        return "southwest [" +
+                "lat='" + lat +
+                ", lng='" + lng +
+                ']';
     }
 }

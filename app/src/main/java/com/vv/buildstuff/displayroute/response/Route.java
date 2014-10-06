@@ -84,4 +84,17 @@ public class Route {
     public void setWarnings(ArrayList<String> warnings) {
         this.warnings = warnings;
     }
+
+    @Override
+    public String toString() {
+        return "Route [" +
+                "summary='" + summary + '\'' +
+                ", legs=" + legs +
+                ", wayPointOrder=" + wayPointOrder +
+                ", overviewPolyLine='" + overviewPolyLine + '\'' +
+                ", bounds=" + bounds +
+                ", copyrights='" + copyrights + '\'' +
+                ", warnings=" + warnings +
+                ']';
+    }
 }

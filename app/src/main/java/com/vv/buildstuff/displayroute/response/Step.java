@@ -81,4 +81,17 @@ public class Step {
     public void setTransitDetails(TransitDetails transitDetails) {
         this.transitDetails = transitDetails;
     }
+
+    @Override
+    public String toString() {
+        return "step [" +
+                "html_instructions='" + htmlInstructions + '\'' +
+                ", distance='" + distance + '\'' +
+                ", duration='" + duration + '\'' +
+                ", start_location=" + startLocation +
+                ", end_location=" + endLocation +
+                ", polyline='" + polyLine + '\'' +
+                ", transitDetails=" + transitDetails +
+                "]";
+    }
 }

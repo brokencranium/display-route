@@ -4,24 +4,15 @@ package com.vv.buildstuff.displayroute.response;
  * Created by vvennava on 10/4/14.
  */
 public class Distance {
-    private String value;
     private String text;
-    private String units;
+    private int value;
+
 
     public Distance() {
     }
 
-    public Distance(String value, String text, String units) {
-        this.value = value;
+    public Distance(String text, int value) {
         this.text = text;
-        this.units = units;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
         this.value = value;
     }
 
@@ -33,11 +24,19 @@ public class Distance {
         this.text = text;
     }
 
-    public String getUnits() {
-        return units;
+    public int getValue() {
+        return value;
     }
 
-    public void setUnits(String units) {
-        this.units = units;
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return "distance [" +
+                "text=" + text +
+                ",value=" + value +
+                ']';
     }
 }

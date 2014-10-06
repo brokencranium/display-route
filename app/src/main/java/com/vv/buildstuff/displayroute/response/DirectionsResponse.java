@@ -32,4 +32,12 @@ public class DirectionsResponse {
     public void setRoutes(ArrayList<Route> routes) {
         this.routes = routes;
     }
+
+    @Override
+    public String toString() {
+        return "DirectionsResponse [" +
+                "status=" + status +
+                ", routes=" + routes +
+                ']';
+    }
 }

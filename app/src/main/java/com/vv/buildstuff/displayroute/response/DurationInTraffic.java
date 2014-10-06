@@ -4,22 +4,14 @@ package com.vv.buildstuff.displayroute.response;
  * Created by vvennava on 10/4/14.
  */
 public class DurationInTraffic {
-    private String value;
     private String text;
+    private int value;
 
     public DurationInTraffic() {
     }
 
-    public DurationInTraffic(String value, String text) {
-        this.value = value;
+    public DurationInTraffic(String text, int value) {
         this.text = text;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
         this.value = value;
     }
 
@@ -29,5 +21,21 @@ public class DurationInTraffic {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return "duration{" +
+                "text=" + text +
+                ", value=" + value +
+                '}';
     }
 }
