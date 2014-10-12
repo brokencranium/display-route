@@ -18,7 +18,7 @@ import javax.net.ssl.HttpsURLConnection;
 /**
  * Created by vvennava on 10/11/14.
  */
-public class RequestPlacesNearbySearch{
+public class RequestPlacesNearbySearch {
     private String urlString;
 
     private String location;
@@ -43,14 +43,13 @@ public class RequestPlacesNearbySearch{
 
     public ArrayList<Results> getPlacesResponse() {
         ResponsePlacesNearbySearch search = null;
+        Reader reader = null;
 
         try {
             URL url = new URL(urlString);
             HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
-
-
-            Reader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+            reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 
             search = readInputStream(reader);
         } catch (MalformedURLException e) {
@@ -59,6 +58,12 @@ public class RequestPlacesNearbySearch{
             System.out.println(e.getMessage());
         } catch (Exception e) {
             System.out.println(e.getMessage());
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return search.getResults();
     }

@@ -6,6 +6,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -19,6 +20,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.vv.buildstuff.displayroute.requestPlaces.RequestPlacesNearbySearch;
+import com.vv.buildstuff.displayroute.responsePlaces.Results;
+
+import java.util.ArrayList;
 
 public class MapsActivity extends FragmentActivity {
 
@@ -102,7 +107,7 @@ public class MapsActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        polylineOptions = new PolylineOptions().width(5).color(Color.rgb(97,125,77)).geodesic(true);
+        polylineOptions = new PolylineOptions().width(5).color(Color.rgb(97, 125, 77)).geodesic(true);
         mMap.setMyLocationEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 // Set all store markers
@@ -133,8 +138,8 @@ public class MapsActivity extends FragmentActivity {
 
     private void updateMapLocation(Location location) {
         //    Log.i(this.getClass().getSimpleName(),"lat + long" + location.getLatitude() + " " + location.getLongitude());
-         final LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        if ( marker != null ) {
+        final LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        if (marker != null) {
             marker.remove();
         }
         marker = mMap.addMarker(new MarkerOptions()
@@ -159,17 +164,31 @@ public class MapsActivity extends FragmentActivity {
 
     }
 
-    private void setAllStoreMarkers(){
-//        RequestPlacesNearbySearch search = new RequestPlacesNearbySearch();
-//        search.setUrlString();
-//        ArrayList<Results> results = search.getPlacesResponse();
-//        for (Results result: results) {
-//            Marker marker = mMap.addMarker(new MarkerOptions()
-//                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.starbuckslogo))
-//                    .position(new LatLng(result.getGeometry().getLocation().getLat(), result.getGeometry().getLocation().getLng()))
-//                    .alpha(0.7f));
-//        }
-//
+    private void setAllStoreMarkers() {
+        LatLong latLong = new LatLong(Double.parseDouble(Miscellaneous.DEFAULT_LATITUDE.getText()), Double.parseDouble(Miscellaneous.DEFAULT_LONGITUDE.getText()));
+        AsyncNearBySearch asyncSearch = new AsyncNearBySearch();
+        asyncSearch.execute(latLong);
     }
- 
+
+    private class AsyncNearBySearch extends AsyncTask<LatLong, String, ArrayList<Results>> {
+
+        @Override
+        protected ArrayList<Results> doInBackground(LatLong... latLongs) {
+            RequestPlacesNearbySearch search = new RequestPlacesNearbySearch();
+            search.setUrlString();
+            return search.getPlacesResponse();
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Results> results) {
+            for (Results result : results) {
+                Marker marker = mMap.addMarker(new MarkerOptions()
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.starbuckslogo))
+                        .position(new LatLng(result.getGeometry().getLocation().getLat(), result.getGeometry().getLocation().getLng()))
+                        .alpha(0.7f));
+            }
+//            super.onPostExecute(results);
+        }
+    }
+
 }
