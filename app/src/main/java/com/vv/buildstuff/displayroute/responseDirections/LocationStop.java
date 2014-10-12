@@ -1,0 +1,41 @@
+package com.vv.buildstuff.displayroute.responseDirections;
+
+/**
+ * Created by vvennava on 10/4/14.
+ */
+public class LocationStop {
+    private String name;
+    private String location;
+
+    public LocationStop() {
+    }
+
+    public LocationStop(String name, String location) {
+        this.name = name;
+        this.location = location;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    @Override
+    public String toString() {
+        return "LocationStop [" +
+                "name='" + name + '\'' +
+                ", location='" + location + '\'' +
+                ']';
+    }
+}

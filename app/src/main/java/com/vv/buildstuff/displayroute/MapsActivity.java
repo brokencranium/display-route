@@ -26,7 +26,6 @@ public class MapsActivity extends FragmentActivity {
     private PolylineOptions polylineOptions;
     private String provider;
     private CameraPosition cameraPosition;
-    private LatLng latLng;
     private Marker marker;
 
     private static final String TEST_PROVIDER = "TEST_PROVIDER";
@@ -106,6 +105,8 @@ public class MapsActivity extends FragmentActivity {
         polylineOptions = new PolylineOptions().width(5).color(Color.rgb(97,125,77)).geodesic(true);
         mMap.setMyLocationEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+// Set all store markers
+        setAllStoreMarkers();
 
     }
 
@@ -132,7 +133,7 @@ public class MapsActivity extends FragmentActivity {
 
     private void updateMapLocation(Location location) {
         //    Log.i(this.getClass().getSimpleName(),"lat + long" + location.getLatitude() + " " + location.getLongitude());
-        latLng = new LatLng(location.getLatitude(), location.getLongitude());
+         final LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         if ( marker != null ) {
             marker.remove();
         }
@@ -158,4 +159,17 @@ public class MapsActivity extends FragmentActivity {
 
     }
 
+    private void setAllStoreMarkers(){
+//        RequestPlacesNearbySearch search = new RequestPlacesNearbySearch();
+//        search.setUrlString();
+//        ArrayList<Results> results = search.getPlacesResponse();
+//        for (Results result: results) {
+//            Marker marker = mMap.addMarker(new MarkerOptions()
+//                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.starbuckslogo))
+//                    .position(new LatLng(result.getGeometry().getLocation().getLat(), result.getGeometry().getLocation().getLng()))
+//                    .alpha(0.7f));
+//        }
+//
+    }
+ 
 }
