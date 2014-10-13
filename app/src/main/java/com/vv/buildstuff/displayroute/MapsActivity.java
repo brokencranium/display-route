@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,21 +21,28 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.vv.buildstuff.displayroute.requestDirections.RequestDirections;
 import com.vv.buildstuff.displayroute.requestPlaces.RequestPlacesNearbySearch;
 import com.vv.buildstuff.displayroute.responsePlaces.Results;
 
 import java.util.ArrayList;
 
-public class MapsActivity extends FragmentActivity {
+public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private PolylineOptions polylineOptions;
     private String provider;
     private CameraPosition cameraPosition;
     private Marker marker;
+    private LocationManager locationManager;
+    private LatLong storeGeoMarker;
+    private LatLong initLoc = new LatLong();
 
     private static final String TEST_PROVIDER = "TEST_PROVIDER";
 
+    /**
+     *
+     */
     private LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
@@ -57,15 +65,31 @@ public class MapsActivity extends FragmentActivity {
         }
     };
 
-
+    /**
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
         setUpListener();
+        setAllStoreMarkersIfNeeded();
     }
 
+    /**
+     *
+     */
+    private void setAllStoreMarkersIfNeeded() {
+        if (storeGeoMarker == null) {
+            // Set all store markers
+            setAllStoreMarkers();
+        }
+    }
+
+    /**
+     *
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -110,14 +134,14 @@ public class MapsActivity extends FragmentActivity {
         polylineOptions = new PolylineOptions().width(5).color(Color.rgb(97, 125, 77)).geodesic(true);
         mMap.setMyLocationEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-// Set all store markers
-        setAllStoreMarkers();
-
     }
 
+    /**
+     *
+     */
     private void setUpListener() {
         String context = Context.LOCATION_SERVICE;
-        LocationManager locationManager = (LocationManager) getSystemService(context);
+        locationManager = (LocationManager) getSystemService(context);
 
         if (locationManager.getProvider(TEST_PROVIDER) != null &&
                 locationManager.isProviderEnabled(TEST_PROVIDER)) {
@@ -132,10 +156,17 @@ public class MapsActivity extends FragmentActivity {
             provider = locationManager.getBestProvider(criteria, true);
         }
         Log.i(this.getClass().getSimpleName(), "Provider Name" + provider);
-        locationManager.getLastKnownLocation(provider);
+
+        if (locationManager.getLastKnownLocation(provider) != null) {
+            initLoc.setLat(locationManager.getLastKnownLocation(provider).getLatitude());
+            initLoc.setLng(locationManager.getLastKnownLocation(provider).getLongitude());
+        }
         locationManager.requestLocationUpdates(provider, 1500, 10, locationListener);
     }
 
+    /**
+     * @param location
+     */
     private void updateMapLocation(Location location) {
         //    Log.i(this.getClass().getSimpleName(),"lat + long" + location.getLatitude() + " " + location.getLongitude());
         final LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -164,12 +195,72 @@ public class MapsActivity extends FragmentActivity {
 
     }
 
+    /**
+     *
+     */
     private void setAllStoreMarkers() {
-        LatLong latLong = new LatLong(Double.parseDouble(Miscellaneous.DEFAULT_LATITUDE.getText()), Double.parseDouble(Miscellaneous.DEFAULT_LONGITUDE.getText()));
+        double lat;
+        double lng;
+
+        mMap.setOnMarkerClickListener(this);
+        if ((initLoc.getLat() != 0) && (initLoc.getLng() != 0)) {
+            lat = initLoc.getLat();
+            lng = initLoc.getLng();
+        } else {
+            lat = Double.parseDouble(Miscellaneous.DEFAULT_LATITUDE.getText());
+            lng = Double.parseDouble(Miscellaneous.DEFAULT_LONGITUDE.getText());
+        }
+        storeGeoMarker = new LatLong(lat, lng);
         AsyncNearBySearch asyncSearch = new AsyncNearBySearch();
-        asyncSearch.execute(latLong);
+        asyncSearch.execute(storeGeoMarker);
     }
 
+    /**
+     * @return
+     */
+    public LatLong getStoreGeoMarker() {
+        return storeGeoMarker;
+    }
+
+    /**
+     * @param storeGeoMarker
+     */
+    public void setStoreGeoMarker(LatLong storeGeoMarker) {
+        this.storeGeoMarker = storeGeoMarker;
+    }
+
+    /**
+     * @return
+     */
+    public LatLong getInitLoc() {
+        return initLoc;
+    }
+
+    /**
+     * @param initLoc
+     */
+    public void setInitLoc(LatLong initLoc) {
+        this.initLoc = initLoc;
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+
+        initLoc.setLat(marker.getPosition().latitude);
+        initLoc.setLng(marker.getPosition().longitude);
+        String dispSelLocation = "Geo co-ordinates " + marker.getPosition().latitude +
+                " " + marker.getPosition().longitude;
+
+        Toast.makeText(getApplicationContext(),
+                dispSelLocation,
+                Toast.LENGTH_LONG).show();
+
+        return false;
+    }
+
+    /**
+     * Local class for searching stores based on the geolocation
+     */
     private class AsyncNearBySearch extends AsyncTask<LatLong, String, ArrayList<Results>> {
 
         @Override
@@ -187,8 +278,37 @@ public class MapsActivity extends FragmentActivity {
                         .position(new LatLng(result.getGeometry().getLocation().getLat(), result.getGeometry().getLocation().getLng()))
                         .alpha(0.7f));
             }
-//            super.onPostExecute(results);
+            super.onPostExecute(results);
         }
     }
+
+    /**
+     * Local class for getting directions based on the current and the end location
+     */
+    private class AsyncDirections extends AsyncTask<LatLong, String, ArrayList<LatLng>> {
+
+
+        @Override
+        protected ArrayList<LatLng> doInBackground(LatLong... latLongs) {
+            RequestDirections requestDirections = new RequestDirections();
+            requestDirections.getDirectionsResponse();
+
+
+
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<LatLng> latLngs) {
+            PolylineOptions linesDir = new PolylineOptions().width(5).color(Color.rgb(212, 125, 210)).geodesic(true);
+            linesDir.addAll(latLngs);
+            mMap.addPolyline(linesDir);
+            super.onPostExecute(latLngs);
+
+        }
+    }
+
 
 }

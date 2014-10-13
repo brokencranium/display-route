@@ -11,7 +11,7 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import static com.vv.buildstuff.displayroute.UtilityMethods.readJSONInputStream;
+import static util.UtilityMethods.readJSONInputStream;
 
 /**
  * Created by vvennava on 10/11/14.

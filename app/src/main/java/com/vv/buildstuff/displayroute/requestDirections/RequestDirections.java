@@ -15,7 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import static com.vv.buildstuff.displayroute.UtilityMethods.replaceSpaceWithCommas;
+import static util.UtilityMethods.replaceSpaceWithCommas;
 
 /**
  * Created by vvennava on 10/5/14.
