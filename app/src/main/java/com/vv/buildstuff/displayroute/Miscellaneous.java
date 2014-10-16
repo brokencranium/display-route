@@ -5,14 +5,16 @@ package com.vv.buildstuff.displayroute;
  */
 public enum Miscellaneous {
 
-    APIURL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="),
+    NEARBY_SEARCH_URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="),
+    DIRECTIONS_URL("http://maps.googleapis.com/maps/api/directions/json?"),
     KEY("AIzaSyDSeKfurM8gqRX0M4Z8zh0MhOxiqE01Tdo"),
     TYPES("food|cafe"),
     DEFAULT_LOCATION("47.673401,-122.342598"),
     DEFAULT_LATITUDE("47.673401"),
     DEFAULT_LONGITUDE("-122.342598"),
     RADIUS("5000"),
-    NAME("starbucks")
+    NAME("starbucks"),
+    DEFAULT_DESTINATION("47.6063683,-122.3322218"),
     ;
 
     private final String value;

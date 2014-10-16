@@ -102,7 +102,7 @@ public class RequestPlacesNearbySearch {
 
 
         StringBuilder urlBuilder = new StringBuilder();
-        final String urlValue = urlBuilder.append(Miscellaneous.APIURL)
+        final String urlValue = urlBuilder.append(Miscellaneous.NEARBY_SEARCH_URL)
                 .append(location)
                 .append("&radius=")
                 .append(radius)

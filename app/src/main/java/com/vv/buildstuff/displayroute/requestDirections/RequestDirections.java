@@ -2,6 +2,7 @@ package com.vv.buildstuff.displayroute.requestDirections;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.vv.buildstuff.displayroute.Miscellaneous;
 import com.vv.buildstuff.displayroute.responseDirections.DirectionsResponse;
 import com.vv.buildstuff.displayroute.responseDirections.Legs;
 import com.vv.buildstuff.displayroute.responseDirections.Routes;
@@ -31,10 +32,74 @@ public class RequestDirections {
     private URL url;
     private String origin;
     private String destination;
+    private String waypoints;
+    private String alternatives;
+
+    public String getWaypoints() {
+        return waypoints;
+    }
+
+    public void setWaypoints(String waypoints) {
+        this.waypoints = waypoints;
+    }
+
+    public String getAlternatives() {
+        return alternatives;
+    }
+
+    public void setAlternatives(String alternatives) {
+        this.alternatives = alternatives;
+    }
+
+    public String getAvoid() {
+        return avoid;
+    }
+
+    public void setAvoid(String avoid) {
+        this.avoid = avoid;
+    }
+
+    public String getUnits() {
+        return units;
+    }
+
+    public void setUnits(String units) {
+        this.units = units;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public String getDeparture_time() {
+        return departure_time;
+    }
+
+    public void setDeparture_time(String departure_time) {
+        this.departure_time = departure_time;
+    }
+
+    public String getArrival_time() {
+        return arrival_time;
+    }
+
+    public void setArrival_time(String arrival_time) {
+        this.arrival_time = arrival_time;
+    }
+
+    private String avoid;
+    private String units;
+    private String region;
+    private String departure_time;
+    private String arrival_time;
 
     public RequestDirections() {
-        this.urlString = "http://maps.googleapis.com/maps/api/directions/json?" +
-                "origin=Seattle&destination=Spokane";
+//        this.urlString = "http://maps.googleapis.com/maps/api/directions/json?" +
+//                "origin=Seattle&destination=Spokane";
 //                +
 //               "&key=AIzaSyDXGbPGjbLwBgMrc2yivRP6NGQwOi_-Mrc";
     }
@@ -49,6 +114,10 @@ public class RequestDirections {
 
     public void setUrlString(String urlString) {
         this.urlString = urlString;
+    }
+
+    public void setUrlString() {
+        this.urlString = urlBuilder();
     }
 
 
@@ -109,5 +178,23 @@ public class RequestDirections {
     }
 
 
+    private String urlBuilder() {
+        if (origin == null) {
+            origin = Miscellaneous.DEFAULT_LOCATION.getText();
+        }
 
+        if (destination == null) {
+            destination = Miscellaneous.DEFAULT_DESTINATION.getText();
+        }
+
+        StringBuilder urlBuilder = new StringBuilder();
+        final String urlValue = urlBuilder.append(Miscellaneous.DIRECTIONS_URL)
+                .append("origin=")
+                .append(origin)
+                .append("&destination=")
+                .append(destination)
+                .toString();
+        System.out.println(urlValue);
+        return urlValue;
+    }
 }

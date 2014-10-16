@@ -250,14 +250,14 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-
-        initLoc.setLat(marker.getPosition().latitude);
-        initLoc.setLng(marker.getPosition().longitude);
+//        initLoc.setLat(marker.getPosition().latitude);
+//        initLoc.setLng(marker.getPosition().longitude);
 
         AsyncDirections asyncDirections = new AsyncDirections();
 
         String startingPoint = initLoc.getLat() + "," + initLoc.getLng();
         String endPoint = marker.getPosition().latitude + "," + marker.getPosition().longitude;
+
         String out = startingPoint + endPoint;
         asyncDirections.execute(startingPoint,endPoint);
         return false;
@@ -299,6 +299,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
             requestDirections.setOrigin(coordinates[0]);
             String out = coordinates[0] + " - " + coordinates[1];
             requestDirections.setDestination(coordinates[1]);
+            requestDirections.setUrlString();
             return requestDirections.getDirectionsResponse();
         }
 
