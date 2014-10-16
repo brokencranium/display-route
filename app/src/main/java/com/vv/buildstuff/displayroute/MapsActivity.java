@@ -160,6 +160,10 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
         if (locationManager.getLastKnownLocation(provider) != null) {
             initLoc.setLat(locationManager.getLastKnownLocation(provider).getLatitude());
             initLoc.setLng(locationManager.getLastKnownLocation(provider).getLongitude());
+            String out = "Lat & long " + locationManager.getLastKnownLocation(provider).getLatitude() + " " + locationManager.getLastKnownLocation(provider).getLatitude();
+            Toast.makeText(getApplicationContext(),
+                    out,
+                    Toast.LENGTH_LONG).show();
         }
         locationManager.requestLocationUpdates(provider, 1500, 10, locationListener);
     }
@@ -213,6 +217,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
         storeGeoMarker = new LatLong(lat, lng);
         AsyncNearBySearch asyncSearch = new AsyncNearBySearch();
         asyncSearch.execute(storeGeoMarker);
+
     }
 
     /**
@@ -248,13 +253,13 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
 
         initLoc.setLat(marker.getPosition().latitude);
         initLoc.setLng(marker.getPosition().longitude);
-        String dispSelLocation = "Geo co-ordinates " + marker.getPosition().latitude +
-                " " + marker.getPosition().longitude;
 
-        Toast.makeText(getApplicationContext(),
-                dispSelLocation,
-                Toast.LENGTH_LONG).show();
+        AsyncDirections asyncDirections = new AsyncDirections();
 
+        String startingPoint = initLoc.getLat() + "," + initLoc.getLng();
+        String endPoint = marker.getPosition().latitude + "," + marker.getPosition().longitude;
+        String out = startingPoint + endPoint;
+        asyncDirections.execute(startingPoint,endPoint);
         return false;
     }
 
@@ -285,28 +290,28 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
     /**
      * Local class for getting directions based on the current and the end location
      */
-    private class AsyncDirections extends AsyncTask<LatLong, String, ArrayList<LatLng>> {
+    private class AsyncDirections extends AsyncTask<String, String, ArrayList<LatLng>> {
 
 
         @Override
-        protected ArrayList<LatLng> doInBackground(LatLong... latLongs) {
+        protected ArrayList<LatLng> doInBackground(String... coordinates) {
             RequestDirections requestDirections = new RequestDirections();
-            requestDirections.getDirectionsResponse();
-
-
-
-
-
-            return null;
+            requestDirections.setOrigin(coordinates[0]);
+            String out = coordinates[0] + " - " + coordinates[1];
+            requestDirections.setDestination(coordinates[1]);
+            return requestDirections.getDirectionsResponse();
         }
 
         @Override
-        protected void onPostExecute(ArrayList<LatLng> latLngs) {
+        protected void onPostExecute(ArrayList<LatLng> latlngList) {
             PolylineOptions linesDir = new PolylineOptions().width(5).color(Color.rgb(212, 125, 210)).geodesic(true);
-            linesDir.addAll(latLngs);
-            mMap.addPolyline(linesDir);
-            super.onPostExecute(latLngs);
 
+            linesDir.addAll(latlngList);
+            for(LatLng latLng : latlngList ){
+                System.out.println("VV Lat Lng" + latLng.latitude + " - " + latLng.longitude);
+            }
+            mMap.addPolyline(linesDir);
+            super.onPostExecute(latlngList);
         }
     }
 

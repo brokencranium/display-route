@@ -1,5 +1,6 @@
 package com.vv.buildstuff.displayroute.requestDirections;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.vv.buildstuff.displayroute.responseDirections.DirectionsResponse;
 import com.vv.buildstuff.displayroute.responseDirections.Legs;
@@ -14,6 +15,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+
+import util.PolyUtil;
 
 import static util.UtilityMethods.replaceSpaceWithCommas;
 
@@ -49,7 +52,8 @@ public class RequestDirections {
     }
 
 
-    public void getDirectionsResponse() {
+    public ArrayList<LatLng> getDirectionsResponse() {
+        ArrayList<LatLng> latLngList = new ArrayList<LatLng>();
         try {
             url = new URL(urlString);
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -60,14 +64,16 @@ public class RequestDirections {
 //         InputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
 //         readXMLInputStream(inputStream);
 //         readJSONInputStream(inputStream);
-
+            System.out.println("URL path " + urlString);
             final ArrayList<Routes> routes = directionsResponse.getRoutes();
             for (Routes route : routes) {
                 ArrayList<Legs> legs = route.getLegs();
                 for (Legs leg : legs) {
                     ArrayList<Step> steps = leg.getSteps();
                     for (Step step : steps) {
-                        System.out.println("latitude " + step.getStart_location().getLat() + " Longitude " + step.getEnd_location().getLng());
+//                        System.out.println("Start latitude " + step.getStart_location().getLat() + " Longitude " + step.getStart_location().getLng());
+//                        System.out.println(" End latitude " + step.getStart_location().getLat() + " Longitude " + step.getStart_location().getLng());
+                        latLngList.addAll(PolyUtil.decode(step.getPolyline().getPoints()));
 
                     }
                 }
@@ -77,6 +83,7 @@ public class RequestDirections {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return latLngList;
     }
 
     private DirectionsResponse readInputStream(Reader reader) {

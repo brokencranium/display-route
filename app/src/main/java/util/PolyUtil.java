@@ -235,8 +235,6 @@ public class PolyUtil {
         return false;
     }
 
-
-
     /**
      * Returns sin(initial bearing from (lat1,lng1) to (lat3,lng3) minus initial bearing
      * from (lat1, lng1) to (lat2,lng2)).
