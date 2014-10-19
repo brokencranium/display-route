@@ -35,6 +35,15 @@ public class RequestDirections {
     private String waypoints;
     private String alternatives;
 
+    private String avoid;
+    private String units;
+    private String region;
+    private String departure_time;
+    private String arrival_time;
+
+
+    private ArrayList<LatLng> rawLatLngList;
+
     public String getWaypoints() {
         return waypoints;
     }
@@ -91,12 +100,6 @@ public class RequestDirections {
         this.arrival_time = arrival_time;
     }
 
-    private String avoid;
-    private String units;
-    private String region;
-    private String departure_time;
-    private String arrival_time;
-
     public RequestDirections() {
 //        this.urlString = "http://maps.googleapis.com/maps/api/directions/json?" +
 //                "origin=Seattle&destination=Spokane";
@@ -121,8 +124,10 @@ public class RequestDirections {
     }
 
 
-    public ArrayList<LatLng> getDirectionsResponse() {
-        ArrayList<LatLng> latLngList = new ArrayList<LatLng>();
+    public ArrayList<ArrayList<LatLng>> getDirectionsResponse() {
+        ArrayList<LatLng> actLatLngList = new ArrayList<LatLng>();
+        ArrayList<LatLng> rawLatLngList = new ArrayList<LatLng>();
+        ArrayList<ArrayList<LatLng>> latLngList = new ArrayList<ArrayList<LatLng>>();
         try {
             url = new URL(urlString);
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -142,8 +147,10 @@ public class RequestDirections {
                     for (Step step : steps) {
 //                        System.out.println("Start latitude " + step.getStart_location().getLat() + " Longitude " + step.getStart_location().getLng());
 //                        System.out.println(" End latitude " + step.getStart_location().getLat() + " Longitude " + step.getStart_location().getLng());
-                        latLngList.addAll(PolyUtil.decode(step.getPolyline().getPoints()));
+                          actLatLngList.addAll(PolyUtil.decode(step.getPolyline().getPoints()));
 
+                          rawLatLngList.add(new LatLng(step.getStart_location().getLat(),step.getStart_location().getLng()));
+                          rawLatLngList.add(new LatLng(step.getEnd_location().getLat(),step.getEnd_location().getLng()));
                     }
                 }
             }
@@ -152,6 +159,8 @@ public class RequestDirections {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        latLngList.add(actLatLngList);
+        latLngList.add(rawLatLngList);
         return latLngList;
     }
 
