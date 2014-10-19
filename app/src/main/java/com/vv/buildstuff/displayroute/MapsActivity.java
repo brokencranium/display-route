@@ -89,6 +89,8 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
     private static final long GEOFENCE_EXPIRATION_TIME =
             SECONDS_PER_HOUR + MILLISECONDS_PER_SECOND + GEOFENCE_EXPIRATION_IN_HOURS;
 
+    private ArrayList<DistanceBetweenLatLng> distLatLngList;
+
     /**
      *
      */
@@ -124,6 +126,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         listGeoFence = new ArrayList<Geofence>();
+        distLatLngList = new ArrayList<DistanceBetweenLatLng>();
         saveGeoFence = new SaveRetailStoreGeoFencing(this);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
@@ -458,7 +461,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
         protected ArrayList<ArrayList<LatLng>> doInBackground(String... coordinates) {
             RequestDirections requestDirections = new RequestDirections();
             requestDirections.setOrigin(coordinates[0]);
-            String out = coordinates[0] + " - " + coordinates[1];
+//            String out = coordinates[0] + " - " + coordinates[1];
             requestDirections.setDestination(coordinates[1]);
             requestDirections.setUrlString();
             return requestDirections.getDirectionsResponse();
@@ -470,26 +473,31 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
             count = Integer.parseInt(counter);
 
             PolylineOptions linesDir = new PolylineOptions().width(5).color(Color.rgb(212, 125, 210)).geodesic(true);
-            PolylineOptions rawLinesDir = new PolylineOptions().width(5).color(Color.rgb(28, 17, 50)).geodesic(true);
+//            PolylineOptions rawLinesDir = new PolylineOptions().width(5).color(Color.rgb(28, 17, 50)).geodesic(true);
 
-            linesDir.addAll(latLngLists.get(0));
-            rawLinesDir.addAll(latLngLists.get(1));
-            for (LatLng latLng : latLngLists.get(1)) {
-                System.out.println("VV Lat Lng" + latLng.latitude + " - " + latLng.longitude);
-                count = count + 1;
-                counter = String.valueOf(count);
-                setGeoFencing(counter, latLng, RADIUS_GEO_FENCE, GEOFENCE_EXPIRATION_TIME, Geofence.GEOFENCE_TRANSITION_ENTER);
-            }
-            if (selectedStorePolyLine != null) {
-                selectedStorePolyLine.remove();
-            }
+            if ( latLngLists.size() >= 1) {
+                linesDir.addAll(latLngLists.get(0));
+//                rawLinesDir.addAll(latLngLists.get(1));
+                for (LatLng latLng : latLngLists.get(0)) {
+                   Log.i(this.getClass().getSimpleName().toString(), "VV Lat Lng" + latLng.latitude + " - " + latLng.longitude);
+                    count = count + 1;
+                    counter = String.valueOf(count);
+                    setGeoFencing(counter, latLng, RADIUS_GEO_FENCE, GEOFENCE_EXPIRATION_TIME, Geofence.GEOFENCE_TRANSITION_ENTER);
+                }
+                addGeoFence();
 
-            if (rawStorePolyLine != null) {
-                rawStorePolyLine.remove();
-            }
-            rawStorePolyLine = mMap.addPolyline(rawLinesDir);
-            selectedStorePolyLine = mMap.addPolyline(linesDir);
 
+
+                if (selectedStorePolyLine != null) {
+                    selectedStorePolyLine.remove();
+                }
+
+//                if (rawStorePolyLine != null) {
+//                    rawStorePolyLine.remove();
+//                }
+//                rawStorePolyLine = mMap.addPolyline(rawLinesDir);
+                selectedStorePolyLine = mMap.addPolyline(linesDir);
+            }
 
             super.onPostExecute(latLngLists);
         }
