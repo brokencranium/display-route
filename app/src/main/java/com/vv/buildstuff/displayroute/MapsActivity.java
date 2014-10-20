@@ -89,7 +89,8 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
     private static final long GEOFENCE_EXPIRATION_TIME =
             SECONDS_PER_HOUR + MILLISECONDS_PER_SECOND + GEOFENCE_EXPIRATION_IN_HOURS;
 
-    private ArrayList<DistanceBetweenLatLng> distLatLngList;
+    //    private ArrayList<DistanceBetweenLatLng> distLatLngList;
+    private CalculateDistanceLatLng calcDistLatLng;
 
     /**
      *
@@ -126,7 +127,8 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         listGeoFence = new ArrayList<Geofence>();
-        distLatLngList = new ArrayList<DistanceBetweenLatLng>();
+//        distLatLngList = new ArrayList<DistanceBetweenLatLng>();
+        calcDistLatLng = new CalculateDistanceLatLng(RADIUS_GEO_FENCE);
         saveGeoFence = new SaveRetailStoreGeoFencing(this);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
@@ -469,23 +471,25 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
 
         @Override
         protected void onPostExecute(ArrayList<ArrayList<LatLng>> latLngLists) {
-           int count;
-            count = Integer.parseInt(counter);
+            int count = Integer.parseInt(counter);
+
 
             PolylineOptions linesDir = new PolylineOptions().width(5).color(Color.rgb(212, 125, 210)).geodesic(true);
 //            PolylineOptions rawLinesDir = new PolylineOptions().width(5).color(Color.rgb(28, 17, 50)).geodesic(true);
 
-            if ( latLngLists.size() >= 1) {
+            if (latLngLists.size() >= 1) {
                 linesDir.addAll(latLngLists.get(0));
 //                rawLinesDir.addAll(latLngLists.get(1));
                 for (LatLng latLng : latLngLists.get(0)) {
-                   Log.i(this.getClass().getSimpleName().toString(), "VV Lat Lng" + latLng.latitude + " - " + latLng.longitude);
+                    Log.i(this.getClass().getSimpleName().toString(), "VV Lat Lng" + latLng.latitude + " - " + latLng.longitude);
                     count = count + 1;
                     counter = String.valueOf(count);
-                    setGeoFencing(counter, latLng, RADIUS_GEO_FENCE, GEOFENCE_EXPIRATION_TIME, Geofence.GEOFENCE_TRANSITION_ENTER);
+                    LatLng calcLatLng = calcDistLatLng.setCalculateDistance(latLng);
+                    if (calcLatLng != null) {
+                        setGeoFencing(counter, calcLatLng, RADIUS_GEO_FENCE, GEOFENCE_EXPIRATION_TIME, Geofence.GEOFENCE_TRANSITION_ENTER);
+                    }
                 }
                 addGeoFence();
-
 
 
                 if (selectedStorePolyLine != null) {
