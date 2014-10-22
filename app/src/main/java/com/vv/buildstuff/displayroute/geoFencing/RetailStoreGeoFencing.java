@@ -1,5 +1,7 @@
 package com.vv.buildstuff.displayroute.geoFencing;
 
+import android.util.Log;
+
 import com.google.android.gms.location.Geofence;
 
 /**
@@ -76,16 +78,12 @@ public class RetailStoreGeoFencing {
      */
 
     public Geofence toGeofence(){
+        Log.i("VV GeoFence create", "Lat lng rad" + getLatitude() + " - " + getLongitude() + " - " + getRadius());
         return new Geofence.Builder().setRequestId(getGeoFenceId())
                                      .setTransitionTypes(getTransition())
                                      .setCircularRegion(getLatitude(),getLongitude(),getRadius())
                                      .setExpirationDuration(getExpiration())
                                      .build();
     }
-
-
-    /**
-     *  Store geo-fencing values
-     */
 
 }

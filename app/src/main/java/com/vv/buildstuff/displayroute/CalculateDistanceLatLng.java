@@ -1,6 +1,7 @@
 package com.vv.buildstuff.displayroute;
 
 import android.location.Location;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -15,8 +16,7 @@ public class CalculateDistanceLatLng {
     private float currDistance;
     private ArrayList<DistanceBetweenLatLng> listDist;
     private LatLng startPoint;
-    private LatLng latLngStart;
-    private LatLng latLngEnd;
+    private LatLng latLngPrevious;
 
 
     public CalculateDistanceLatLng(float maxDistance) {
@@ -24,35 +24,33 @@ public class CalculateDistanceLatLng {
         this.maxDistance = maxDistance;
     }
 
-    public LatLng setCalculateDistance(LatLng latLng) {
+    public LatLng setCalculateDistance(LatLng latLngCurrent) {
         float[] distance = new float[10];
 
-        if (startPoint == null) {
-            startPoint = latLng;
-        }
-
-        if (latLngStart == null) {
-            latLngStart = latLng;
-            return latLng;
-        }
-
-        if (latLngEnd == null) {
-            latLngEnd = latLng;
+        if (startPoint == null || latLngPrevious == null) {
+            startPoint = latLngCurrent;
+            latLngPrevious = latLngCurrent;
+//            return latLngCurrent;
         }
 
 
-        Location.distanceBetween(latLngStart.latitude, latLngStart.longitude, latLngEnd.latitude, latLngEnd.longitude, distance);
+        Log.i("VV Coordinates ", "Start LatLng " + latLngPrevious.latitude + "_" + latLngPrevious.longitude +
+                " End LatLng " + latLngCurrent.latitude + "_" + latLngCurrent.longitude);
+
+        Location.distanceBetween(latLngPrevious.latitude, latLngPrevious.longitude, latLngCurrent.latitude, latLngCurrent.longitude, distance);
+
+        Log.i("VV Distance[0] ", String.valueOf(distance[0]));
+
         currDistance = currDistance + distance[0];
-
+        latLngPrevious = latLngCurrent;
 
         if (currDistance > maxDistance) {
-
+            Log.i("VV currDistance ", String.valueOf(currDistance));
             distance[0] = currDistance;
-            final DistanceBetweenLatLng distLatLng = new DistanceBetweenLatLng(startPoint, latLngEnd, distance);
+            listDist.add(new DistanceBetweenLatLng(startPoint, latLngCurrent, distance));
             startPoint = null;
             currDistance = 0;
-            listDist.add(distLatLng);
-            return latLngEnd;
+            return latLngCurrent;
         } else {
             return null;
         }
